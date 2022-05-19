@@ -1,0 +1,40 @@
+---
+# tasks file for maven
+- name: copy code
+  git:
+    repo: https://github.com/nveeresh133/mavenproject.git
+    dest: /home/ubuntu/maven
+    clone: yes
+    update: yes
+- name: Maven clean install
+  command: mvn -f /home/ubuntu/maven/web-project clean install
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

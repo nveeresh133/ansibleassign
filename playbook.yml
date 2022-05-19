@@ -1,0 +1,99 @@
+---
+- hosts: all
+  become: true
+  tasks:
+   
+   - name: Install curl
+     apt:
+       name: curl
+       state: latest
+   
+   - name: Install Unzip
+     apt:
+      name: unzip
+      state: latest
+   
+   - name: Install wget 
+     apt:
+       name: wget
+       state: latest
+   
+   - name: Install openjdk-11-jdk
+     apt:
+       name: openjdk-11-jdk
+       state: latest
+   
+   - name: Install git
+     apt:
+      name: git
+      state: latest
+   
+   - name: install maven 
+     apt: 
+      name: maven
+      state: latest   
+   
+   - name: copy code
+     git:
+      repo: https://github.com/nveeresh133/mavenproject.git
+      dest: /home/ubuntu/maven
+      clone: yes
+      update: yes
+   
+   - name: Maven clean install
+     command: mvn -f /home/ubuntu/maven/web-project clean install
+   
+   - name: Tomcat installation and configuration
+     get_url:
+         url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz 
+         dest: /home/ubuntu/
+   
+   - name: Extracting Tomcat
+     shell: tar -xvzf  apache-tomcat-10.0.20.tar.gz
+   
+   - name: renaming tomcat
+     command: mv apache-tomcat-10.0.20 tomcat
+   
+   - name: removing  tar file
+     command: rm -rf apache-tomcat-10.0.20.tar.gz
+   
+   - name: Copy target folder
+     shell: cp /home/ubuntu/maven/web-project/target/web-project.war /home/ubuntu/tomcat/webapps 
+   
+   - name: changing password
+     lineinfile: 
+           path: /home/ubuntu/tomcat/conf/tomcat-users.xml 
+           line: '<user username="veer133" password="veer133" roles="manager-gui,admin-gui,manager-script"/>'
+           insertbefore: </tomcat-users>
+
+   - name: Comment manager configuration1
+     replace:
+        path: /home/ubuntu/tomcat/webapps/manager/META-INF/context.xml
+        regexp: '(\s+)<Valve className="org.apache.catalina.valves.RemoteAddrValve"'
+        replace: '\n\t<!--<Valve className="org.apache.catalina.valves.RemoteAddrValve"-->'
+   
+   - name: Comment manager configuration1
+     replace:
+        path: /home/ubuntu/tomcat/webapps/host-manager/META-INF/context.xml
+        regexp: '(\s+)<Valve className="org.apache.catalina.valves.RemoteAddrValve"'
+        replace: '\n\t<!--<Valve className="org.apache.catalina.valves.RemoteAddrValve"-->'
+   
+   - name: permission to catalina
+     command: chmod 777 /home/ubuntu/tomcat/bin/catalina.sh 
+   
+   - name: permission to shutdown
+     command: chmod 777 /home/ubuntu/tomcat/bin/shutdown.sh
+   
+   - name: permission to startup
+     command: chmod 777 /home/ubuntu/tomcat/bin/startup.sh
+   
+   - name: Stop catalina
+     command: nohup /home/ubuntu/tomcat/bin/shutdown.sh
+   
+   - name: Start catalina
+     command: nohup /home/ubuntu/tomcat/bin/startup.sh    
+   
+
+
+
+

@@ -1,0 +1,45 @@
+---
+ - hosts: all
+   become: true
+   tasks:
+
+      - name: Install Mysql
+        apt:
+          name: mysql-server
+      - name: Start mysql server
+        service:
+          name: mysql
+          state: started
+          enabled: true      
+              
+      - name: Install redis server
+        apt:
+          name: redis-server
+          state: latest  
+
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

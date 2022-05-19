@@ -1,0 +1,44 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install latest version of Apache
+      apt: name=apache2 update_cache=yes state=latest
+    - name: copy code
+     git: https://github.com/nveeresh133/terraformimages.git
+      repo: 
+      dest: /home/ubuntu/apache
+      clone: yes
+      update: yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
